@@ -97,7 +97,7 @@ session and start a new one when I really don't want to log any more.
   Then I went back to my old friend called `xxd`.
 
   After all, when writing a shell script, it will be ridiculous to not
-  utilize all the external tools already in your $PATH, and it makes no
+  utilize all the external tools already in your `$PATH`, and it makes no
   sense to write higher level code with a language that does not have a
   proper implementation for list, lambda, string, number...  But going in
-  the reverse direction is pretty of fun!
+  the reverse direction is pretty fun!
