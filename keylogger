@@ -39,8 +39,8 @@ declare -r KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
 declare -r LOG_FILE=$KL_DIR/keylogger.log;
 declare -r ONE_ASCII_HEX='^[0-7][0-9a-fA-F]+$';
 declare -r ONE_ASCII_DEC='^([0-9]|[1-9][0-9]|1[01][0-9]|12[0-7])$';
-declare -r MAX_NBYTES=60
-declare -r MAX_NCOLUMNS=30
+declare -r MAX_NBYTES=60;
+declare -r MAX_NCOLUMNS=30;
 
 function kl_dec2hex () {
         [[ $* =~ $ONE_ASCII_DEC ]] || return 1;
@@ -87,8 +87,7 @@ function kl_patch_all_ascii_keystroke () {
                 tuple=$head;
                 tuple=${tuple#??};
                 tuple=${tuple%?};
-                {
-                        IFS= read -r -d $'\t' hexdigits;
+                {       IFS= read -r -d $'\t' hexdigits;
                         IFS= read -r -d $'\t' sendliteral;
                         IFS= read -r -d $'\t' bindliteral;
                 } <<< "$tuple";
@@ -155,7 +154,7 @@ function kl_log_history_get () {
 };
 
 function kl_ncolumns_of_byte () {
-        declare -i value=$(kl_hex2dec $1)
+        declare -i value=$(kl_hex2dec $1);
         if (( value >= 32 && value <= 126 )); then
                 : '95 printables';
                 printf %s 1;
@@ -170,6 +169,10 @@ function kl_print_formatted_byte () {
         : 'Encode the bytes into readable characters';
         : '(two letter ctrl characters need color)';
         : '(# need to be encoded as ## for tmux)';
+};
+
+function kl_rewrite_tmux_status () {
+        tmux set-option status-right "$1" >/dev/null;
 };
 
 function kl_log_update_view () {
@@ -209,13 +212,8 @@ function kl_log_update_view () {
                 (( current_ncols += this_ncol ));
                 statusmsg=$(kl_print_formatted_byte "$byte")$statusmsg;
         done;
-        : 'TODO';
-        : 'Compute the last M bytes that fits into the status bar';
-        : 'Each byte may have different number of columns when displayed';
 
-        : 'TODO';
-        : 'Update the tmux status-message here';
-        tmux set-option status-right "$statusmsg" >/dev/null;
+        kl_rewrite_tmux_status "$statusmsg";
 };
 
 function kl_log_key () {
@@ -224,7 +222,7 @@ function kl_log_key () {
         kl_log_history_add $1;
         kl_log_update_view;
 
-        : 'After this function is done, update kl_build_callback_cmdstring';
+        : ' TODO After this function is done, update kl_build_callback_cmdstring';
         printf '%s\n' "[DEBUG] The input to kl_log_key is '$1'";
 };
 
