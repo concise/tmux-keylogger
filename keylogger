@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 function kl_main () {
 
         declare -g    KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
@@ -35,9 +36,20 @@ function kl_main () {
         : 'TODO';
         : 'ASCII characters translate (two letter ctrl char and # of columns)';
         : 'The log database (IO interface for a server or a regular file)';
-        : 'The tmux interface';
+        : 'The tmux interface to deal with status message';
+        : 'Setting up the tmux keybindings';
+        : 'Setting up the tmux keylogging callback entry point';
         : 'Some list operation';
 };
+
+
+IFS= read -r -d END_BASH_READ myvariable <<'END_STD_INPUT'
+'$PWD
+\'$HOME
+\\'$PATH
+END_BASH_READ
+END_STD_INPUT
+
 
 if [[ ${BASH_SOURCE[0]} != $0 ]]; then
         : 'The script is sourced';
@@ -47,5 +59,6 @@ else
         : 'Invoke the main procedure now';
         kl_main "$@";
 fi;
+
 
 # vi: se et sta ts=8 sw=8 sts=2 :
