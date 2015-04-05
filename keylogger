@@ -92,17 +92,52 @@ function kl_patch_all_tmux_options () {
         tmux set-option -g window-status-current-format ''  >/dev/null;
 };
 
-function kl_main () {
+function kl_log_key () {
+        [[ $# = 1 ]] || return 1;
+        [[ $1 =~ $ONE_ASCII_HEX ]] || return 1;
+
         : 'TODO';
+        : 'Log the key and update the view here';
+        : 'After this function is done, change the callback cmd to it';
+
+        : 'TODO';
+        : 'When updating the view, I will need some additional functions...';
         : 'ASCII characters translate (two letter ctrl char and # of columns)';
+        : 'Some list operation';
+
+        : 'TODO';
         : 'The log database (IO interface for a server or a regular file)';
         : 'The tmux interface to deal with status message';
-        : 'Setting up the tmux keybindings';
-        : 'Setting up the tmux keylogging callback entry point';
-        : 'Some list operation';
+
+        printf %s\\n "The input to kl_log_key is '$1'";
 };
 
+function kl_main () {
+        if [[ $# = 2 && $1 = - ]]; then
+                kl_log_key $2;
+                return;
+        fi;
 
+        if [[ $# = 1 && $1 = start ]]; then
+                if [[ ${TMUX:-} = '' ]]; then
+                        printf '%s\n' 'Please run the command inside tmux';
+                        return 1;
+                fi;
+                kl_patch_all_tmux_options;
+                return;
+        fi;
+
+        printf 'Usage:\n';
+        printf '\t%s\n' 'keylogger start';
+        printf '\t%s\n' 'keylogger - <hexvalue>';
+        printf '\n';
+        printf 'Example:\n';
+        printf '\t%s\n' 'Start logging in tmux: ./keylogger start';
+        printf '\t%s\n' 'Log the keystroke "h": ./keylogger - 68';
+        printf '\t%s\n' "                       ('h' == 104 == 0x68)";
+        printf '\n';
+        return 1;
+};
 
 declare table;
 
@@ -238,8 +273,6 @@ declare table;
 |
 END_STD_INPUT
 
-
-
 if [[ ${BASH_SOURCE[0]} != $0 ]]; then
         : 'The script is sourced';
         : 'Do not do anything here';
@@ -250,7 +283,5 @@ else
         set -u;
         kl_main "$@";
 fi;
-
-
 
 # vi: se et sta ts=8 sw=8 sts=2 :
