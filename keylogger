@@ -154,6 +154,24 @@ function kl_log_history_get () {
         : ' Each line contains two hex digits     ';
 };
 
+function kl_ncolumns_of_byte () {
+        declare -i value=$(kl_hex2dec $1)
+        if (( value >= 32 && value <= 126 )); then
+                : '95 printables';
+                printf %s 1;
+        else
+                : '33 control characters';
+                printf %s 2;
+        fi;
+};
+
+function kl_print_formatted_byte () {
+        : 'TODO';
+        : 'Encode the bytes into readable characters';
+        : '(two letter ctrl characters need color)';
+        : '(# need to be encoded as ## for tmux)';
+};
+
 function kl_log_update_view () {
         declare -i i;
         declare -i n_bytes=0;
@@ -180,17 +198,24 @@ function kl_log_update_view () {
         : '     [9]="74"      <-- t               ';
         : '                                       ';
 
+        declare statusmsg;
+        declare -i this_ncol;
+        declare -i current_ncols=0;
+        for byte in "${array_of_bytes[@]}"; do
+                this_ncol=$(kl_ncolumns_of_byte "$byte");
+                if (( current_ncols + this_ncol > MAX_NCOLUMNS )); then
+                        break;
+                fi;
+                (( current_ncols += this_ncol ));
+                statusmsg=$(kl_print_formatted_byte "$byte")$statusmsg;
+        done;
         : 'TODO';
         : 'Compute the last M bytes that fits into the status bar';
         : 'Each byte may have different number of columns when displayed';
 
         : 'TODO';
-        : 'Encode the bytes into readable characters';
-        : '(two letter ctrl characters need color)';
-        : '(# need to be encoded as ## for tmux)';
-
-        : 'TODO';
         : 'Update the tmux status-message here';
+        tmux set-option status-right "$statusmsg" >/dev/null;
 };
 
 function kl_log_key () {
