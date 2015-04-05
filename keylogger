@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function kl_main () {
+
+	declare -g    KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
+	declare -g -i KL_INTEGER=123;
+	declare -g -a KL_INDEXED_ARRAY=();
+
+	function kl_say () {
+		printf %s "$*";
+	};
+
+	function kl_somefunc () {
+		kl_say 'The function is called!';
+	};
+
+	kl_somefunc;
+};
+
+if [[ ${BASH_SOURCE[0]} != $0 ]]; then
+	: 'The script is sourced';
+	: 'Do not do anything here';
+else
+	: 'The script is executed';
+	: 'Invoke the main procedure now';
+	kl_main $@;
+fi;
+
+# vim: set noet ts=8 sw=8 sta sts=4 :
