@@ -31,6 +31,9 @@
 #   -   Please do not leave the keylogger.log file too large.
 #       That may make this script slower...
 #
+#   -   This script is not well tested under various circumstances.
+#       Maybe it might break something but I haven't noticed
+#
 
 declare -r KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
 declare -r LOG_FILE=$KL_DIR/keylogger.log;
@@ -152,16 +155,42 @@ function kl_log_history_get () {
 };
 
 function kl_log_update_view () {
-        declare lines=$(kl_log_history_get)
+        declare -i i;
+        declare -i n_bytes=0;
+        declare -a array_of_bytes=(); : 'Last keystroke first';
+
+        while read byte_in_hh; do
+                (( n_bytes += 1 ));
+                (( i = MAX_NBYTES - n_bytes ));
+                array_of_bytes[$i]=$byte_in_hh;
+        done < <(kl_log_history_get);
+
+        : ' n_bytes=7                             ';
+        : ' array_of_bytes=( ... )                ';
+        : '                                       ';
+        : '     [0]=""                            ';
+        : '     [1]=""                            ';
+        : '     [2]=""                            ';
+        : '     [3]="16"      <-- ^C   (latest)   ';
+        : '     [4]="18"      <-- ^X              ';
+        : '     [5]="15"      <-- ^U              ';
+        : '     [6]="74"      <-- t               ';
+        : '     [7]="73"      <-- s               ';
+        : '     [8]="65"      <-- e               ';
+        : '     [9]="74"      <-- t               ';
+        : '                                       ';
+
         : 'TODO';
-        : 'Update the tmux status-message here';
-
-        : 'Get the last N bytes we typed...';
         : 'Compute the last M bytes that fits into the status bar';
+        : 'Each byte may have different number of columns when displayed';
 
+        : 'TODO';
         : 'Encode the bytes into readable characters';
         : '(two letter ctrl characters need color)';
         : '(# need to be encoded as ## for tmux)';
+
+        : 'TODO';
+        : 'Update the tmux status-message here';
 };
 
 function kl_log_key () {
