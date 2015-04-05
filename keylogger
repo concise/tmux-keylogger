@@ -2,50 +2,50 @@
 
 function kl_main () {
 
-	declare -g    KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
-	declare -g -i KL_INTEGER=123;
-	declare -g -a KL_INDEXED_ARRAY=();
-	declare -g    ONE_ASCII_HEX='^[0-7][0-9a-fA-F]+$';
-	declare -g    ONE_ASCII_DEC='^([0-9]|[1-9][0-9]|1[01][0-9]|12[0-7])$';
+        declare -g    KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
+        declare -g -i KL_INTEGER=123;
+        declare -g -a KL_INDEXED_ARRAY=();
+        declare -g    ONE_ASCII_HEX='^[0-7][0-9a-fA-F]+$';
+        declare -g    ONE_ASCII_DEC='^([0-9]|[1-9][0-9]|1[01][0-9]|12[0-7])$';
 
-	function kl_dec2hex () {
-		if [[ $* =~ $ONE_ASCII_DEC ]]; then
-			printf %02x "$*";
-		else
-			return 1;
-		fi;
-	};
+        function kl_dec2hex () {
+                if [[ $* =~ $ONE_ASCII_DEC ]]; then
+                        printf %02x "$*";
+                else
+                        return 1;
+                fi;
+        };
 
-	function kl_hex2dec () {
-		if [[ $* =~ $ONE_ASCII_HEX ]]; then
-			printf %d 0x"$*";
-		else
-			return 1;
-		fi;
-	};
+        function kl_hex2dec () {
+                if [[ $* =~ $ONE_ASCII_HEX ]]; then
+                        printf %d 0x"$*";
+                else
+                        return 1;
+                fi;
+        };
 
-	function kl_hex2raw () {
-		if [[ $* =~ $ONE_ASCII_HEX ]]; then
-			printf "\x$*";
-		else
-			return 1;
-		fi;
-	};
+        function kl_hex2raw () {
+                if [[ $* =~ $ONE_ASCII_HEX ]]; then
+                        printf "\x$*";
+                else
+                        return 1;
+                fi;
+        };
 
-	: 'TODO';
-	: 'ASCII characters translate (two letter ctrl char and # of columns)';
-	: 'The log database (IO interface for a server or a regular file)';
-	: 'The tmux interface';
-	: 'Some list operation';
+        : 'TODO';
+        : 'ASCII characters translate (two letter ctrl char and # of columns)';
+        : 'The log database (IO interface for a server or a regular file)';
+        : 'The tmux interface';
+        : 'Some list operation';
 };
 
 if [[ ${BASH_SOURCE[0]} != $0 ]]; then
-	: 'The script is sourced';
-	: 'Do not do anything here';
+        : 'The script is sourced';
+        : 'Do not do anything here';
 else
-	: 'The script is executed';
-	: 'Invoke the main procedure now';
-	kl_main "$@";
+        : 'The script is executed';
+        : 'Invoke the main procedure now';
+        kl_main "$@";
 fi;
 
-# vim: set noet ts=8 sw=8 sta sts=4 :
+# vi: se et sta ts=8 sw=8 sts=2 :
