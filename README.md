@@ -12,7 +12,7 @@ status message recalculate; I wrote some stupid code)
 Feel free to fork it, or reimplement it with another language!
 
 
-## Why
+## Why?
 
 When doing screencast, I relied on tool like "KeyCastr" on OS X to display what
 I've done with my keyboard.  But that project seems dead a few years ago, and I
@@ -34,7 +34,7 @@ the same place.  Or you can clone this repository with git:
 
     git clone https://github.com/concise/tmux-keylogger
 
-After you get the script. Let's say, for example, you are in a tmux session and
+After you get the script, let's say for example, you are in a tmux session and
 the executable `keylogger` file is right under current working directory.  When
 you want to start logging keystrokes, just type:
 
@@ -70,7 +70,7 @@ session and start a new one when I really don't want to log any more.
   Other keystrokes like the meta keys (e.g. `M-b`) will not
   be logged if you do not press the `^[` key separately.
 
-- My `l_log_update_viewk` function is slow.  It may take up to 100 ms every
+- My `kl_log_update_view` function is slow.  It may take up to 100 ms every
   time when it wants to update the status bar...
 
   There are many possible ways to improve performance.  We can batch a
@@ -90,7 +90,7 @@ session and start a new one when I really don't want to log any more.
 
   Yet I just (stupidly) wanted to see if we can do these work with such a
   limited tool by trying to only use bash builtins...  And suddenly when
-  I recalled that in Bash we cannot have a string with a null 0x00
+  I recalled that in Bash we cannot have a string with a null `0x00`
   character, after I wrote a trivial and simple `log-byte-to-a-file`
   function, my mind was blown...
 
