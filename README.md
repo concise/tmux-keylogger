@@ -1,6 +1,6 @@
 # tmux-keylogger
 
-A small self-contained bash script that makes tmux display all your ASCII
+A small self-contained bash script that makes `tmux` display all your ASCII
 keystrokes, including control characters, right in your status bar.
 
 ![tmux-keylogger demo](https://raw.githubusercontent.com/concise/tmux-keylogger/master/demo.gif)
@@ -16,17 +16,22 @@ Feel free to fork it or reimplement it with another language!
 
 Put the `keylogger` file somewhere on your computer, preferably an empty
 directory since it will automatically generate a log file `keylogger.log` at
-the same place.  For example, when you are in a tmux session, and this script
-is right under current working directory, just type:
+the same place.  Or you can clone this repository with git:
+
+    git clone https://github.com/concise/tmux-keylogger
+
+After you get the script. Let's say, for example, you are in a tmux session and
+the executable `keylogger` file is right under current working directory.  When
+you want to start logging keystrokes, just type:
 
     ./keylogger start
 
-and the keystrokes you type will be displayed in the status bar.  In the future
-I may add a `keylogger stop` command, but for now I just throw away the tmux
-session and start a new one when I don't want to log any more.
+and the keys you type will be displayed in the status bar.  Perhaps a
+`keylogger stop` command will be useful, but for now I just throw away the tmux
+session and start a new one when I really don't want to log any more.
 
 
-## Notes
+## Developer Notes
 
 - This script requires some dependancies outside GNU bash: `tmux`, `dirname`,
   `tail`, and `xxd`.
