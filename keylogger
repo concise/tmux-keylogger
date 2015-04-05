@@ -1,38 +1,98 @@
 #!/bin/bash
 
+declare -r KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
+declare -r ONE_ASCII_HEX='^[0-7][0-9a-fA-F]+$';
+declare -r ONE_ASCII_DEC='^([0-9]|[1-9][0-9]|1[01][0-9]|12[0-7])$';
+
+function kl_dec2hex () {
+        [[ $* =~ $ONE_ASCII_DEC ]] || return 1;
+        printf %02x "$*";
+};
+
+function kl_hex2dec () {
+        [[ $* =~ $ONE_ASCII_HEX ]] || return 1;
+        printf %d 0x"$*";
+};
+
+function kl_hex2raw () {
+        [[ $* =~ $ONE_ASCII_HEX ]] || return 1;
+        printf "\x$*";
+};
+
+function kl_build_callback_cmdstring () {
+        declare callback_cmd;
+        callback_cmd+="tmux set-option status-right '";
+        callback_cmd+=$1;
+        callback_cmd+="' >/dev/null 2>&1 &";
+        printf %s "$callback_cmd";
+};
+
+function kl_rebind_ascii_key () {
+        declare callback_cmd=$(kl_build_callback_cmdstring $1);
+        tmux bind-key -n "$3" send-keys "$2" '\;' run-shell "$callback_cmd";
+};
+
+function kl_rebind_prefix_key () {
+        declare callback_cmd=$(kl_build_callback_cmdstring $1);
+        tmux bind-key C-$2 send-prefix '\;' run-shell "$callback_cmd";
+};
+
+function kl_patch_all_ascii_keystroke () {
+        declare counter;
+        declare head;
+        declare tail=$table;
+        declare tuple hexdigits sendliteral bindliteral;
+        for (( counter = 0 ; counter < 128 ; counter ++ )); do
+                head=${tail%%$'\n'|*};
+                tail=${tail#|*|$'\n'};
+
+                tuple=$head;
+                tuple=${tuple#??};
+                tuple=${tuple%?};
+                {
+                        IFS= read -r -d $'\t' hexdigits;
+                        IFS= read -r -d $'\t' sendliteral;
+                        IFS= read -r -d $'\t' bindliteral;
+                } <<< "$tuple";
+
+                kl_rebind_ascii_key "$hexdigits" "$sendliteral" "$bindliteral";
+        done;
+};
+
+function kl_patch_send_prefix_key () {
+        declare quicklookup tmpstr re target lookup result;
+        quicklookup+=' a01 b02 c03 d04 e05 f06 g07 h08 i09 j0a k0b l0c m0d';
+        quicklookup+=' n0e o0f p10 q11 r12 s13 t14 u15 v16 w17 x18 y19 z1a';
+        tmpstr=$(printf %s $(tmux list-keys | grep -m 1 send-prefix || :));
+        if [[ $tmpstr = '' ]]; then
+                echo 'Notice: Currently no send-prefix key binding is found.';
+        else
+                tmpstr=${tmpstr%send-prefix};
+                tmpstr=${tmpstr#bind-keyC-};
+                re='^[a-z]$';
+                if [[ $tmpstr =~ $re ]]; then
+                        target=$tmpstr;
+                        lookup=${quicklookup##* $target};
+                        result=${lookup:0:2};
+                        kl_rebind_prefix_key "$result" "$target";
+                else
+                        echo 'Please check if your send-prefix works.';
+                fi;
+        fi;
+};
+
+function kl_patch_all_tmux_options () {
+        kl_patch_all_ascii_keystroke;
+        kl_patch_send_prefix_key;
+        tmux set-option status on                           >/dev/null;
+        tmux set-option status-right ''                     >/dev/null;
+        tmux set-option status-right-length 60              >/dev/null;
+        tmux set-option status-left  ''                     >/dev/null;
+        tmux set-option -g window-status-format ''          >/dev/null;
+        tmux set-option -g window-status-current-format ''  >/dev/null;
+};
 
 function kl_main () {
-
-        declare -g    KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
-        declare -g -i KL_INTEGER=123;
-        declare -g -a KL_INDEXED_ARRAY=();
-        declare -g    ONE_ASCII_HEX='^[0-7][0-9a-fA-F]+$';
-        declare -g    ONE_ASCII_DEC='^([0-9]|[1-9][0-9]|1[01][0-9]|12[0-7])$';
-
-        function kl_dec2hex () {
-                if [[ $* =~ $ONE_ASCII_DEC ]]; then
-                        printf %02x "$*";
-                else
-                        return 1;
-                fi;
-        };
-
-        function kl_hex2dec () {
-                if [[ $* =~ $ONE_ASCII_HEX ]]; then
-                        printf %d 0x"$*";
-                else
-                        return 1;
-                fi;
-        };
-
-        function kl_hex2raw () {
-                if [[ $* =~ $ONE_ASCII_HEX ]]; then
-                        printf "\x$*";
-                else
-                        return 1;
-                fi;
-        };
-
         : 'TODO';
         : 'ASCII characters translate (two letter ctrl char and # of columns)';
         : 'The log database (IO interface for a server or a regular file)';
@@ -43,7 +103,10 @@ function kl_main () {
 };
 
 
-IFS= read -r -d END_BASH_READ tmux_ascii_table <<'END_STD_INPUT'
+
+declare table;
+
+{ IFS= read -r -d $'\x11' table || :; } <<'END_STD_INPUT'
 |	00	^@	C-Space	|
 |	01	^A	C-a	|
 |	02	^B	C-b	|
@@ -172,8 +235,9 @@ IFS= read -r -d END_BASH_READ tmux_ascii_table <<'END_STD_INPUT'
 |	7d	}	}	|
 |	7e	~	~	|
 |	7f	Bspace	BSpace	|
-END_BASH_READ
+|
 END_STD_INPUT
+
 
 
 if [[ ${BASH_SOURCE[0]} != $0 ]]; then
@@ -182,8 +246,11 @@ if [[ ${BASH_SOURCE[0]} != $0 ]]; then
 else
         : 'The script is executed';
         : 'Invoke the main procedure now';
+        set -e;
+        set -u;
         kl_main "$@";
 fi;
+
 
 
 # vi: se et sta ts=8 sw=8 sts=2 :
