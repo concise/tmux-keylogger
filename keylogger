@@ -57,6 +57,11 @@ function kl_hex2raw () {
         printf "\x$*";
 };
 
+function kl_dec2raw () {
+        [[ $* =~ $ONE_ASCII_HEX ]] || return 1;
+        kl_hex2raw "$(kl_dec2hex "$*")";
+};
+
 function kl_build_callback_cmdstring () {
         declare callback_cmd;
         callback_cmd+="tmux set-option status-right '";
@@ -165,10 +170,26 @@ function kl_ncolumns_of_byte () {
 };
 
 function kl_print_formatted_byte () {
-        : 'TODO';
-        : 'Encode the bytes into readable characters';
-        : '(two letter ctrl characters need color)';
-        : '(# need to be encoded as ## for tmux)';
+        declare -i -r value=$(kl_hex2dec $1);
+        if (( value < 32 || value > 126 )); then
+                printf %s '#[reverse]';
+        fi;
+
+        if (( value == 23 )); then
+                printf %s '##';
+        elif (( value >= 32 && value <= 126 )); then
+                kl_dec2raw "$value";
+        elif (( value >= 1 && value <= 31 )); then
+                kl_dec2raw "$(( value + 64 ))";
+        elif (( value == 0 )); then
+                printf %s '^@';
+        elif (( value == 127 )); then
+                printf %s '^?';
+        fi;
+
+        if (( value < 32 || value > 126 )); then
+                printf %s '#[default]';
+        fi;
 };
 
 function kl_rewrite_tmux_status () {
