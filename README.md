@@ -28,6 +28,11 @@ session and start a new one when I don't want to log any more.
 
 - One log file will be created in the same directory with this script.
 
+- When you copy and paste a large chunk of text, it will not work properly.
+  Same for the case that you type too fast...  Though it is not a big issue for
+  me since when I use this keylogger I am demonstrating some cmdline stuff to
+  others and I have to prevent me from typing too fast...
+
 - This script is not well tested under various circumstances.
   Maybe it might break something but I haven't noticed
 

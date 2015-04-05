@@ -142,7 +142,7 @@ function kl_print_formatted_byte () {
                 printf %s '#[reverse]';
         fi;
 
-        if (( value == 23 )); then
+        if (( value == 35 )); then
                 printf %s '##';
         elif (( value >= 32 && value <= 126 )); then
                 kl_dec2raw "$value";
