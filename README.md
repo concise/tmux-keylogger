@@ -12,6 +12,20 @@ status message recalculate; I wrote some stupid code)
 Feel free to fork it, or reimplement it with another language!
 
 
+## Why
+
+When doing screencast, I relied on tool like "KeyCastr" on OS X to display what
+I've done with my keyboard.  But that project seems dead a few years ago, and I
+do not know if there is any open source alternative.  So I decided to try if I
+can make it under tmux, because most of the time I do my job under a text
+console, and even though the programmability of tmux is awfully bad, it does
+meet the minimun requirements for my idea...
+
+And there it is, a single bash script that does almost what I want.  (Meta key
+combos have not been implemented yet)  Though it is still at alpha quality, I
+am pretty satisfied now.
+
+
 ## Usage
 
 Put the `keylogger` file somewhere on your computer, preferably an empty
@@ -87,4 +101,3 @@ session and start a new one when I really don't want to log any more.
   sense to write higher level code with a language that does not have a
   proper implementation for list, lambda, string, number...  But going in
   the reverse direction is pretty of fun!
-
