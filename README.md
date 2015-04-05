@@ -81,23 +81,23 @@ session and start a new one when I really don't want to log any more.
   problem in modern machines.  But after all, I just want to do a quick
   POC and this version already works for me.
 
-- The very first quick hack version I approach this idea was done in
-  Python.  Although if I do it all in Python, the number of lines I guess
+- The very first quick hack version I approached this idea was done in
+  Python.  Although had I done it all in Python, the number of lines I guess
   should be still about the same (2x ~ 3x lines needed for Bash) but the
   amount of time spent on Bash, without any useful list, number, or
-  string data types are insane.  And the final result should take me 10x
-  ~ 20x more time, in contrast to utilizing a good scripting language.
+  string data types are insanely high; probably 10x ~ 20x more time, in
+  contrast to a good scripting language, is needed for bash.
 
-  Yet I just (stupidly) wanted to see if we can do these work with such a
-  limited tool by trying to only use bash builtins...  And suddenly when
-  I recalled that in Bash we cannot have a string with a null `0x00`
-  character, after I wrote a trivial and simple `log-byte-to-a-file`
-  function, my mind was blown...
+  Yet I just (stupidly) wanted to see if we can do these works with such a
+  limited tool by trying to only use bash builtins...  And a few hours ago, I
+  recalled that in Bash we cannot have a string with a null `0x00` character
+  after I wrote a trivial and simple `read-byte-from-file` function, my mind
+  was blown...
 
   Then I went back to my old friend called `xxd`.
 
-  After all, when writing a shell script, it will be ridiculous to not
-  utilize all the external tools already in your `$PATH`, and it makes no
-  sense to write higher level code with a language that does not have a
-  proper implementation for list, lambda, string, number...  But going in
-  the reverse direction is pretty fun!
+  After all, when writing a shell script, it will be ridiculous to not utilize
+  the great tools already in your `$PATH`, and it makes no sense to write
+  higher level code with a language that does not have a proper implementation
+  for list, lambda, string, number...  But going in the reverse direction is
+  kind of fun!
