@@ -5,16 +5,38 @@ function kl_main () {
 	declare -g    KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
 	declare -g -i KL_INTEGER=123;
 	declare -g -a KL_INDEXED_ARRAY=();
+	declare -g    ONE_ASCII_HEX='^[0-7][0-9a-fA-F]+$';
+	declare -g    ONE_ASCII_DEC='^([0-9]|[1-9][0-9]|1[01][0-9]|12[0-7])$';
 
-	function kl_say () {
-		printf %s "$*";
+	function kl_dec2hex () {
+		if [[ $* =~ $ONE_ASCII_DEC ]]; then
+			printf %02x "$*";
+		else
+			return 1;
+		fi;
 	};
 
-	function kl_somefunc () {
-		kl_say 'The function is called!';
+	function kl_hex2dec () {
+		if [[ $* =~ $ONE_ASCII_HEX ]]; then
+			printf %d 0x"$*";
+		else
+			return 1;
+		fi;
 	};
 
-	kl_somefunc;
+	function kl_hex2raw () {
+		if [[ $* =~ $ONE_ASCII_HEX ]]; then
+			printf "\x$*";
+		else
+			return 1;
+		fi;
+	};
+
+	: 'TODO';
+	: 'ASCII characters translate (two letter ctrl char and # of columns)';
+	: 'The log database (IO interface for a server or a regular file)';
+	: 'The tmux interface';
+	: 'Some list operation';
 };
 
 if [[ ${BASH_SOURCE[0]} != $0 ]]; then
@@ -23,7 +45,7 @@ if [[ ${BASH_SOURCE[0]} != $0 ]]; then
 else
 	: 'The script is executed';
 	: 'Invoke the main procedure now';
-	kl_main $@;
+	kl_main "$@";
 fi;
 
 # vim: set noet ts=8 sw=8 sta sts=4 :
