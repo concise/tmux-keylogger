@@ -7,9 +7,9 @@ keystrokes, including control characters, right in your status bar.
 
 This codebase is a proof of concept about the idea of a portable keystroke
 displayer...  My implementaion in bash has bad performance now.  (slow tmux
-status message recalculate)
+status message recalculate; I wrote some stupid code)
 
-Feel free to fork it or reimplement it with another language!
+Feel free to fork it, or reimplement it with another language!
 
 
 ## Usage
