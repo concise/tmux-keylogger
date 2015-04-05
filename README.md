@@ -1,6 +1,6 @@
 # tmux-keylogger
 
-A small single-file bash script that allows you to display all your ASCII
+A small single-file bash script that makes tmux display all your ASCII
 keystrokes, including control characters, right in your status bar.
 
 
@@ -8,42 +8,37 @@ keystrokes, including control characters, right in your status bar.
 
 Put the `keylogger` file somewhere on your computer, preferably an empty
 directory since it will automatically generate a log file `keylogger.log` at
-the same place.  When you are in a tmux session, just type:
+the same place.  For example, when you are in a tmux session, and this script
+is right under current working directory, just type:
 
-    keylogger start
+    ./keylogger start
 
-and the keystrokes you type will be displayed in the status bar.
+and the keystrokes you type will be displayed in the status bar.  In the future
+I may add a `keylogger stop` command, but for now I just throw away the tmux
+session and start a new one when I don't want to log any more.
 
 
 ## Notes
 
-This script requires some dependancies outside GNU bash: `tmux`, `dirname`,
-`tail`, and `xxd`.
-
-What this script does to your working environment:
+- This script requires some dependancies outside GNU bash: `tmux`, `dirname`,
+  `tail`, and `xxd`.
 
 - The command `./keylogger start` changes bindings of the single letter
   key so that each of these type of keystrokes can be logged.
 
 - One log file will be created in the same directory with this script.
 
-- By default it display your last typed key strokes to the right of the
-  status bar by changing the tmux status-right option.
-
 - This script is not well tested under various circumstances.
   Maybe it might break something but I haven't noticed
-
-- Please do not leave the keylogger.log file too large.
-  That may make this script slower...
 
 - Currently only one-byte ASCII keystrokes are
   supported, because most of the time we are entering
   these characters and it's pretty to handle in tmux.
 
-  Other keystrokes like the meta keys (e.g. M-b) will not
-  be logged if you do not press the ^[ key manually.
+  Other keystrokes like the meta keys (e.g. `M-b`) will not
+  be logged if you do not press the `^[` key separately.
 
-- My `l_log_update_viewk` function is slow.  It may take up to 100ms every
+- My `l_log_update_viewk` function is slow.  It may take up to 100 ms every
   time when it wants to update the status bar...
 
   There are many possible ways to improve performance.  We can batch a
@@ -64,7 +59,7 @@ What this script does to your working environment:
   Yet I just (stupidly) wanted to see if we can do these work with such a
   limited tool by trying to only use bash builtins...  And suddenly when
   I recalled that in Bash we cannot have a string with a null 0x00
-  character, after I wrote a trivial and simple log-byte-to-a-file
+  character, after I wrote a trivial and simple `log-byte-to-a-file`
   function, my mind was blown...
 
   Then I went back to my old friend called `xxd`.
