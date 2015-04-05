@@ -137,6 +137,22 @@ declare table;
 |
 END_STD_INPUT
 
+function tmux_rebind () {
+        declare callback_cmd;
+        callback_cmd+="tmux set-option status-right '";
+        callback_cmd+=$1;
+        callback_cmd+="' >/dev/null 2>&1 &";
+        tmux bind-key -n "$3" send-keys "$2" '\;' run-shell "$callback_cmd";
+};
+
+function tmux_prefix_rebind () {
+        declare callback_cmd;
+        callback_cmd+="tmux set-option status-right '";
+        callback_cmd+=$1;
+        callback_cmd+="' >/dev/null 2>&1 &";
+        tmux bind-key C-$2 send-prefix '\;' run-shell "$callback_cmd";
+};
+
 function rebind_all_ascii () {
         declare counter;
         declare head;
@@ -155,29 +171,30 @@ function rebind_all_ascii () {
                         IFS= read -r -d $'\t' bindliteral;
                 } <<< "$tuple";
 
-                tmux bind-key -n "$bindliteral" send-keys "$sendliteral" '\;' run-shell "tmux set-option status-right '$hexdigits' >/dev/null 2>&1 &";
+                tmux_rebind "$hexdigits" "$sendliteral" "$bindliteral";
         done;
 };
 
 function rebind_send_prefix () {
-        declare tmpstr quicklookup re target lookup result
-        tmpstr=$(printf %s $(tmux list-keys | grep -m 1 send-prefix || :))
-        quicklookup=' a01 b02 c03 d04 e05 f06 g07 h08 i09 j0a k0b l0c m0d n0e o0f p10 q11 r12 s13 t14 u15 v16 w17 x18 y19 z1a'
+        declare quicklookup tmpstr re target lookup result;
+        quicklookup+=' a01 b02 c03 d04 e05 f06 g07 h08 i09 j0a k0b l0c m0d';
+        quicklookup+=' n0e o0f p10 q11 r12 s13 t14 u15 v16 w17 x18 y19 z1a';
+        tmpstr=$(printf %s $(tmux list-keys | grep -m 1 send-prefix || :));
         if [[ $tmpstr = '' ]]; then
-                echo 'Notice: Currently no send-prefix key binding is found.'
+                echo 'Notice: Currently no send-prefix key binding is found.';
         else
-                tmpstr=${tmpstr%send-prefix}
-                tmpstr=${tmpstr#bind-keyC-}
-                re='^[a-z]$'
+                tmpstr=${tmpstr%send-prefix};
+                tmpstr=${tmpstr#bind-keyC-};
+                re='^[a-z]$';
                 if [[ $tmpstr =~ $re ]]; then
-                        target=$tmpstr
-                        lookup=${quicklookup##* $target}
-                        result=${lookup:0:2}
-                        tmux bind-key C-$target send-keys ^$target '\;' run-shell "tmux set-option status-right '$result' >/dev/null 2>&1 &";
+                        target=$tmpstr;
+                        lookup=${quicklookup##* $target};
+                        result=${lookup:0:2};
+                        tmux_prefix_rebind "$result" "$target";
                 else
-                        echo 'Notice: If some key is bound to `send-prefix`, you may want to rebind it...'
-                fi
-        fi
+                        echo 'Please check if your send-prefix works.';
+                fi;
+        fi;
 };
 
 rebind_all_ascii;
