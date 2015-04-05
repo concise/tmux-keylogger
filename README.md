@@ -1,9 +1,16 @@
 # tmux-keylogger
 
-A small single-file bash script that makes tmux display all your ASCII
+A small self-contained bash script that makes tmux display all your ASCII
 keystrokes, including control characters, right in your status bar.
 
 ![tmux-keylogger demo](https://raw.githubusercontent.com/concise/tmux-keylogger/master/demo.gif)
+
+This codebase is a proof of concept about the idea of a portable keystroke
+displayer...  My implementaion in bash has bad performance now.  (slow tmux
+status message recalculate)
+
+Feel free to fork it or reimplement it with another language!
+
 
 ## Usage
 
