@@ -1,9 +1,43 @@
 #!/bin/bash
+#
+# Dependancies:
+#
+#       bash
+#       tmux
+#       dirname
+#       tail
+#       xxd
+#
+#
+# Side effects:
+#
+#   -   One log file in the same directory as this script
+#
+#   -   `./keylogger start` changes tmux key bindings
+#
+#
+# Note:
+#
+#   -   If your tmux window width is too small the status message
+#       will not be able to be correctly displayed.
+#
+#   -   Currently only one-byte ASCII keystrokes are
+#       supported, because most of the time we are entering
+#       these characters and it's pretty to handle in tmux.
+#
+#       Other keystrokes like the meta keys (e.g. M-b) will not
+#       be logged if you do not press the ^[ key manually.
+#
+#   -   Please do not leave the keylogger.log file too large.
+#       That may make this script slower...
+#
 
 declare -r KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
 declare -r LOG_FILE=$KL_DIR/keylogger.log;
 declare -r ONE_ASCII_HEX='^[0-7][0-9a-fA-F]+$';
 declare -r ONE_ASCII_DEC='^([0-9]|[1-9][0-9]|1[01][0-9]|12[0-7])$';
+declare -r MAX_NBYTES=60
+declare -r MAX_NCOLUMNS=30
 
 function kl_dec2hex () {
         [[ $* =~ $ONE_ASCII_DEC ]] || return 1;
@@ -94,16 +128,31 @@ function kl_patch_all_tmux_options () {
 };
 
 function kl_log_history_add () {
-        : 'TODO';
-        : 'Save the key (in binary format) into $LOG_FILE';
+        kl_hex2raw $1 >> "$LOG_FILE";
 };
 
 function kl_log_history_get () {
-        : 'TODO';
-        : 'Get the last N bytes from $LOG_FILE';
+        [[ -e "$LOG_FILE" ]] || return 0;
+        [[ -f "$LOG_FILE" ]] || return 1;
+
+        declare logtail=$(tail -c "$MAX_NBYTES" "$LOG_FILE" | xxd -c 1 -p);
+        printf '%s' "$logtail";
+        : ' If you just typed "test" and "^U^X^C" ';
+        : ' this will print out something like:   ';
+        : '                                       ';
+        : '      74           <-- t               ';
+        : '      65           <-- e               ';
+        : '      73           <-- s               ';
+        : '      74           <-- t               ';
+        : '      15           <-- ^U              ';
+        : '      18           <-- ^X              ';
+        : '      16           <-- ^C   (latest)   ';
+        : '                                       ';
+        : ' Each line contains two hex digits     ';
 };
 
 function kl_log_update_view () {
+        declare lines=$(kl_log_history_get)
         : 'TODO';
         : 'Update the tmux status-message here';
 
@@ -117,7 +166,6 @@ function kl_log_update_view () {
 
 function kl_log_key () {
         [[ $# = 1 ]] || return 1;
-        [[ $1 =~ $ONE_ASCII_HEX ]] || return 1;
 
         kl_log_history_add $1;
         kl_log_update_view;
