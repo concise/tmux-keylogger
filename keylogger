@@ -1,4 +1,5 @@
 #!/bin/bash
+# vi:se et sts=8:
 
 declare -r KL_NAME=keylogger;
 declare -r KL_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P);
