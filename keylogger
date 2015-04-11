@@ -243,135 +243,139 @@ function kl_main () {
 : ' This works because the standard input data from ';
 : ' this here document block does not contain any   ';
 : ' character of the byte value 0x11 (i.e. the ^Q)  ';
+: '                                                 ';
+: ' Tab-separated fields:                           ';
+: '     value   send    bind    display             ';
+: '                                                 ';
 { IFS= read -r -d $'\x11' tmux_ascii_table || :; } <<'END_STD_INPUT'
-|	00	^@	C-Space	|
-|	01	^A	C-a	|
-|	02	^B	C-b	|
-|	03	^C	C-c	|
-|	04	^D	C-d	|
-|	05	^E	C-e	|
-|	06	^F	C-f	|
-|	07	^G	C-g	|
-|	08	^H	C-h	|
-|	09	^I	C-i	|
-|	0a	^J	C-j	|
-|	0b	^K	C-k	|
-|	0c	^L	C-l	|
-|	0d	^M	C-m	|
-|	0e	^N	C-n	|
-|	0f	^O	C-o	|
-|	10	^P	C-p	|
-|	11	^Q	C-q	|
-|	12	^R	C-r	|
-|	13	^S	C-s	|
-|	14	^T	C-t	|
-|	15	^U	C-u	|
-|	16	^V	C-v	|
-|	17	^W	C-w	|
-|	18	^X	C-x	|
-|	19	^Y	C-y	|
-|	1a	^Z	C-z	|
-|	1b	^[	C-[	|
-|	1c	^\	C-\	|
-|	1d	^]	C-]	|
-|	1e	^^	C-^	|
-|	1f	^_	C-_	|
-|	20	 	 	|
-|	21	!	!	|
-|	22	"	"	|
-|	23	#	#	|
-|	24	$	$	|
-|	25	%	%	|
-|	26	&	&	|
-|	27	'	'	|
-|	28	(	(	|
-|	29	)	)	|
-|	2a	*	*	|
-|	2b	+	+	|
-|	2c	,	,	|
-|	2d	-	-	|
-|	2e	.	.	|
-|	2f	/	/	|
-|	30	0	0	|
-|	31	1	1	|
-|	32	2	2	|
-|	33	3	3	|
-|	34	4	4	|
-|	35	5	5	|
-|	36	6	6	|
-|	37	7	7	|
-|	38	8	8	|
-|	39	9	9	|
-|	3a	:	:	|
-|	3b	\\;	\;	|
-|	3c	<	<	|
-|	3d	=	=	|
-|	3e	>	>	|
-|	3f	?	?	|
-|	40	@	@	|
-|	41	A	A	|
-|	42	B	B	|
-|	43	C	C	|
-|	44	D	D	|
-|	45	E	E	|
-|	46	F	F	|
-|	47	G	G	|
-|	48	H	H	|
-|	49	I	I	|
-|	4a	J	J	|
-|	4b	K	K	|
-|	4c	L	L	|
-|	4d	M	M	|
-|	4e	N	N	|
-|	4f	O	O	|
-|	50	P	P	|
-|	51	Q	Q	|
-|	52	R	R	|
-|	53	S	S	|
-|	54	T	T	|
-|	55	U	U	|
-|	56	V	V	|
-|	57	W	W	|
-|	58	X	X	|
-|	59	Y	Y	|
-|	5a	Z	Z	|
-|	5b	[	[	|
-|	5c	\	\	|
-|	5d	]	]	|
-|	5e	^	^	|
-|	5f	_	_	|
-|	60	`	`	|
-|	61	a	a	|
-|	62	b	b	|
-|	63	c	c	|
-|	64	d	d	|
-|	65	e	e	|
-|	66	f	f	|
-|	67	g	g	|
-|	68	h	h	|
-|	69	i	i	|
-|	6a	j	j	|
-|	6b	k	k	|
-|	6c	l	l	|
-|	6d	m	m	|
-|	6e	n	n	|
-|	6f	o	o	|
-|	70	p	p	|
-|	71	q	q	|
-|	72	r	r	|
-|	73	s	s	|
-|	74	t	t	|
-|	75	u	u	|
-|	76	v	v	|
-|	77	w	w	|
-|	78	x	x	|
-|	79	y	y	|
-|	7a	z	z	|
-|	7b	{	{	|
-|	7c	|	|	|
-|	7d	}	}	|
-|	7e	~	~	|
-|	7f	Bspace	BSpace	|
+|	00	^@	C-Space	^@	|
+|	01	^A	C-a	^A	|
+|	02	^B	C-b	^B	|
+|	03	^C	C-c	^C	|
+|	04	^D	C-d	^D	|
+|	05	^E	C-e	^E	|
+|	06	^F	C-f	^F	|
+|	07	^G	C-g	^G	|
+|	08	^H	C-h	^H	|
+|	09	^I	C-i	^I	|
+|	0a	^J	C-j	^J	|
+|	0b	^K	C-k	^K	|
+|	0c	^L	C-l	^L	|
+|	0d	^M	C-m	^M	|
+|	0e	^N	C-n	^N	|
+|	0f	^O	C-o	^O	|
+|	10	^P	C-p	^P	|
+|	11	^Q	C-q	^Q	|
+|	12	^R	C-r	^R	|
+|	13	^S	C-s	^S	|
+|	14	^T	C-t	^T	|
+|	15	^U	C-u	^U	|
+|	16	^V	C-v	^V	|
+|	17	^W	C-w	^W	|
+|	18	^X	C-x	^X	|
+|	19	^Y	C-y	^Y	|
+|	1a	^Z	C-z	^Z	|
+|	1b	^[	C-[	^[	|
+|	1c	^\	C-\	^\	|
+|	1d	^]	C-]	^]	|
+|	1e	^^	C-^	^^	|
+|	1f	^_	C-_	^_	|
+|	20	 	 	 	|
+|	21	!	!	!	|
+|	22	"	"	"	|
+|	23	#	#	#	|
+|	24	$	$	$	|
+|	25	%	%	%	|
+|	26	&	&	&	|
+|	27	'	'	'	|
+|	28	(	(	(	|
+|	29	)	)	)	|
+|	2a	*	*	*	|
+|	2b	+	+	+	|
+|	2c	,	,	,	|
+|	2d	-	-	-	|
+|	2e	.	.	.	|
+|	2f	/	/	/	|
+|	30	0	0	0	|
+|	31	1	1	1	|
+|	32	2	2	2	|
+|	33	3	3	3	|
+|	34	4	4	4	|
+|	35	5	5	5	|
+|	36	6	6	6	|
+|	37	7	7	7	|
+|	38	8	8	8	|
+|	39	9	9	9	|
+|	3a	:	:	:	|
+|	3b	\\;	\;	\\;	|
+|	3c	<	<	<	|
+|	3d	=	=	=	|
+|	3e	>	>	>	|
+|	3f	?	?	?	|
+|	40	@	@	@	|
+|	41	A	A	A	|
+|	42	B	B	B	|
+|	43	C	C	C	|
+|	44	D	D	D	|
+|	45	E	E	E	|
+|	46	F	F	F	|
+|	47	G	G	G	|
+|	48	H	H	H	|
+|	49	I	I	I	|
+|	4a	J	J	J	|
+|	4b	K	K	K	|
+|	4c	L	L	L	|
+|	4d	M	M	M	|
+|	4e	N	N	N	|
+|	4f	O	O	O	|
+|	50	P	P	P	|
+|	51	Q	Q	Q	|
+|	52	R	R	R	|
+|	53	S	S	S	|
+|	54	T	T	T	|
+|	55	U	U	U	|
+|	56	V	V	V	|
+|	57	W	W	W	|
+|	58	X	X	X	|
+|	59	Y	Y	Y	|
+|	5a	Z	Z	Z	|
+|	5b	[	[	[	|
+|	5c	\	\	\	|
+|	5d	]	]	]	|
+|	5e	^	^	^	|
+|	5f	_	_	_	|
+|	60	`	`	`	|
+|	61	a	a	a	|
+|	62	b	b	b	|
+|	63	c	c	c	|
+|	64	d	d	d	|
+|	65	e	e	e	|
+|	66	f	f	f	|
+|	67	g	g	g	|
+|	68	h	h	h	|
+|	69	i	i	i	|
+|	6a	j	j	j	|
+|	6b	k	k	k	|
+|	6c	l	l	l	|
+|	6d	m	m	m	|
+|	6e	n	n	n	|
+|	6f	o	o	o	|
+|	70	p	p	p	|
+|	71	q	q	q	|
+|	72	r	r	r	|
+|	73	s	s	s	|
+|	74	t	t	t	|
+|	75	u	u	u	|
+|	76	v	v	v	|
+|	77	w	w	w	|
+|	78	x	x	x	|
+|	79	y	y	y	|
+|	7a	z	z	z	|
+|	7b	{	{	{	|
+|	7c	|	|	|	|
+|	7d	}	}	}	|
+|	7e	~	~	~	|
+|	7f	Bspace	BSpace	^?	|
 |
 END_STD_INPUT
 
@@ -385,3 +389,5 @@ else
         set -u;
         kl_main "$@";
 fi;
+
+# TODO: Add rendering characters to the table and dynamically parse them
