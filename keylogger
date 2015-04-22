@@ -240,14 +240,12 @@ function kl_main () {
         return 1;
 };
 
-: ' This works because the standard input data from ';
-: ' this here document block does not contain any   ';
-: ' character of the byte value 0x11 (i.e. the ^Q)  ';
+: ' Tab-separated 4 fields:                         ';
 : '                                                 ';
-: ' Tab-separated fields:                           ';
 : '     value   send    bind    display             ';
+: '     ------- ------- ------- -------             ';
 : '                                                 ';
-{ IFS= read -r -d $'\x11' tmux_ascii_table || :; } <<'END_STD_INPUT'
+{ IFS= read -r -d '' tmux_ascii_table || :; } <<'END_STD_INPUT'
 |	00	^@	C-Space	^@	|
 |	01	^A	C-a	^A	|
 |	02	^B	C-b	^B	|
